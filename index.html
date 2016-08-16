@@ -3,102 +3,26 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="shortcut icon" href="favicon.ico">
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-62276892-2', 'auto');
-  ga('send', 'pageview');
-</script>
-
 </head>
 
 <body>
 	<center>
 		<canvas id="canvas" style="padding:0px 80px 0px 80px;"></canvas>
-    <p>
-      <button onclick="startstop()" style="width:150px">Start / Stop</button>
-      <a style="font-size:180%">&nbsp;Simulation Speed:&nbsp;</a>
-      <button onclick="speeddown()" style="width:24px">&#8722;</button>
-      <input id="simulationspeed" type="text" value="100" onblur="if(this.value==''){this.value='100';}" style="width:56px"/>
-      <button onclick="speedup()" style="width:24px">+</button>
-    </p>
-    <p>
-      <button onclick="addrunner()" style="width:192px">Add Runner</button>
-      <a style="font-size:180%">&nbsp;Runner Speed:&nbsp;</a>
-      <button onclick="runnerspeeddown()" style="width:24px">&#8722;</button>
-      <input id="runnerspeed" type="text" value="20" onblur="if(this.value==''){this.value='20';}" style="width:56px"/>
-      <button onclick="runnerspeedup()" style="width:24px">+</button>
-    </p>
-    <p>
-      <button onclick="demo();" style="width:94px">Demo</button>
-      <button onclick="window.location.href='index.html?nodemo';" style="width:100px">Reset</button>
-      <button id="freeze" onclick="freeze();" style="width:300px">Lonely Freeze <span style="color:#00EE99">On</span>/Off</button>
-    </p>
-    <p>
-      <button onclick="alllonely();" style="width:160px">Wipe Ticks</button>
-      <button style="width:338px; border:0px" type="button" disabled><a>&nbsp;&nbsp;Yet To Be Alone:&nbsp;</a><a id="lonelycount"></a></button>
-    </p>
   </center>
-
-  <table style="position:absolute; left:10px; top:10px; background-color:black;">
-    <td>
-      <a href="#popup1"><img title="Information" src="../questionmark.png" style="width:60px"></a><br>
-      <a href="https://twitter.com/jimdgmiles" target=blank_><img title="James Miles on Twitter" src="../twitter.png" style="width:60px; height:60px"></a><br>
-      <a href="http://jdgmiles.github.io/" target="_blank"><img title="Projects Page" src="../jdgm.png" style="width:60px"></a>
-    </td>
-  </table>
-
-  <div id="popup1" class="overlay">
-    <div class="popup">
-      <div style="font-family:Georgia; color:white; text-align:center; font-size:250%; border:0px;">The Lonely Runner</div>
-      <a class="close" href="#">&times;</a>
-      <p style="font-family:Georgia; font-size:150%; color:white; text-align:justify;">The Lonely Runner Conjecture states that if K runners set off at constant different speeds to run laps around a 1 mile circular track then for each runner there is some time when she is at least 1/K miles from all the other runners.<br><br>This simulation allows you to experiment with the ideas of the conjecture visually.</p>
-    </div>
-
 </body>
 </html>
 
 <script type="text/javascript">
 var field={width:500, height:500};
 var fieldcolor="white";
-
-var go=1;
-
-var simulationspeed=document.getElementById("simulationspeed").value;
-
-var trackcolor="#440000";
-var tracksize=240;
-var trackwidth=40;
-
-var barriercolor="#990000"
-var barrierwidth=5;
-var barrierspace=5;
-
-var runners=0;
-var lonelycount=0;
-
-var runnerarmwidth=3;
-
-var runnercolor=[];
-var runnerbordercolor=[];
-var runnertickcolor=[];
-var runnerlonely=[];
-var runnerprogress=[];
-var runnerspeed=[];
-var runnersize=[];
-var runnerborder=[];
-var runnervictorydance=[];
-
-var victoryperiod=40;
-var victoryfreeze=0;
-
-var victoryfreezeonoff=1;
-
-var wipecooloff=700;
-var wipecoolofftimer=wipecooloff+1;
+var time=-200;
+var huntersize=18;
+var hunterborder=9;
+var fps=70;
+var hunter1pos=50;
+var hunter2pos=54;
+var hunter3xpos=250;
+var hunter3ypos=54;
 
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d");
@@ -107,133 +31,68 @@ canvas.width = field.width;
 canvas.height = field.height;
 
 function draw(){
-simulationspeed=document.getElementById("simulationspeed").value;
 
 ctx.fillStyle=fieldcolor;
 ctx.fillRect(0,0,field.width,field.height);
 
 ctx.beginPath();
-ctx.arc(field.width/2, field.height/2, tracksize, 0, 2 * Math.PI);
-ctx.fillStyle=barriercolor;
-ctx.fill();
+ctx.moveTo(50,400);
+ctx.lineTo(250,54);
+ctx.lineTo(450,400);
+ctx.closePath();
+ctx.strokeStyle="black";
+ctx.lineWidth=9;
+ctx.stroke();
 
 ctx.beginPath();
-ctx.arc(field.width/2, field.height/2, tracksize-barrierwidth, 0, 2 * Math.PI);
-ctx.fillStyle=fieldcolor;
-ctx.fill();
+ctx.moveTo(50,400);
+ctx.lineTo(250,285);
+ctx.moveTo(250,54);
+ctx.lineTo(250,285);
+ctx.moveTo(450,400);
+ctx.lineTo(250,285);
+ctx.closePath();
+ctx.strokeStyle="black";
+ctx.lineWidth=7;
+ctx.stroke();
 
 ctx.beginPath();
-ctx.arc(field.width/2, field.height/2, tracksize-barrierwidth-barrierspace, 0, 2 * Math.PI);
-ctx.fillStyle=trackcolor;
+ctx.arc(hunter1pos, 400, huntersize, 0, 2 * Math.PI);
+ctx.fillStyle="#9999FF";
+ctx.lineWidth=hunterborder;
+ctx.strokeStyle="#000099";
 ctx.fill();
+ctx.stroke();
 
 ctx.beginPath();
-ctx.arc(field.width/2, field.height/2, tracksize-barrierwidth-barrierspace-trackwidth, 0, 2 * Math.PI);
-ctx.fillStyle=fieldcolor;
+ctx.arc(250, hunter2pos, huntersize, 0, 2 * Math.PI);
+ctx.fillStyle="#9999FF";
+ctx.lineWidth=hunterborder;
+ctx.strokeStyle="#000099";
 ctx.fill();
+ctx.stroke();
 
 ctx.beginPath();
-ctx.arc(field.width/2, field.height/2, tracksize-barrierwidth-2*barrierspace-trackwidth, 0, 2 * Math.PI);
-ctx.fillStyle=barriercolor;
+ctx.arc(hunter3xpos, hunter3ypos, huntersize, 0, 2 * Math.PI);
+ctx.fillStyle="#FF9999";
+ctx.lineWidth=hunterborder;
+ctx.strokeStyle="#990000";
 ctx.fill();
+ctx.stroke();
 
-ctx.beginPath();
-ctx.arc(field.width/2, field.height/2, tracksize-2*barrierwidth-2*barrierspace-trackwidth, 0, 2 * Math.PI);
-ctx.fillStyle=fieldcolor;
-ctx.fill();
+time++;
+if(time<101 && time>0){hunter1pos=50+Math.floor(400*time/100); hunter3xpos=250+Math.floor(200*time/100); hunter3ypos=54+Math.floor(346*time/100);}
+if(time>200 && time<301){hunter1pos=450-Math.floor(400*(time-200)/100); hunter3xpos=250-Math.floor(200*(time-200)/100); hunter3ypos=285+Math.floor(115*(time-200)/100);}
 
-if(simulationspeed==0){simulationspeed=100;}
+if(time<201 && time>100){hunter2pos=54+Math.floor(231*(time-100)/100); hunter3xpos=450-Math.floor(200*(time-100)/100); hunter3ypos=400-Math.floor(115*(time-100)/100);}
+if(time<401 && time>300){hunter2pos=285-Math.floor(231*(time-300)/100); hunter3xpos=50+Math.floor(200*(time-300)/100); hunter3ypos=400-Math.floor(346*(time-300)/100);}
 
-for(var i=0; i<runners; i++)
-{
-  if(victoryfreezeonoff==1 && runners>1 && runnerlonely[i]==1 && runnervictorydance[i]<victoryperiod){
-    victoryfreeze=0;
-    ctx.beginPath();
-    ctx.arc(field.width/2, field.height/2, tracksize-barrierwidth-barrierspace-trackwidth/2, -runnerprogress[i]+Math.PI/2-(2*Math.PI/runners), -runnerprogress[i]+Math.PI/2+(2*Math.PI/runners));
-    ctx.lineWidth=runnerarmwidth;
-    ctx.strokeStyle=fieldcolor;
-    ctx.stroke();
-    runnervictorydance[i]++;
-    if(runnervictorydance[i]<victoryperiod){victoryfreeze=1;}
-  }
+if(time>600){time=0;}
 
-  ctx.beginPath();
-  ctx.arc(field.width/2+Math.sin(runnerprogress[i])*(tracksize-barrierwidth-barrierspace-trackwidth/2), field.height/2+Math.cos(runnerprogress[i])*(tracksize-barrierwidth-barrierspace-trackwidth/2), runnersize[i], 0, 2 * Math.PI);
-  ctx.fillStyle=runnerbordercolor[i];
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(field.width/2+Math.sin(runnerprogress[i])*(tracksize-barrierwidth-barrierspace-trackwidth/2), field.height/2+Math.cos(runnerprogress[i])*(tracksize-barrierwidth-barrierspace-trackwidth/2), runnersize[i]-runnerborder[i], 0, 2 * Math.PI);
-  ctx.fillStyle=runnercolor[i];
-  ctx.fill();
-
-  if(runnerlonely[i]==0 && wipecoolofftimer>wipecooloff){
-    runnerlonely[i]=2;
-    for(var j=0; j<runners; j++){
-      if(Math.min(Math.abs(runnerprogress[i]-runnerprogress[j]), 2*Math.PI-Math.abs(runnerprogress[i]-runnerprogress[j]))<=1.99*Math.PI/runners){runnerlonely[i]--;}
-      }
-    if(runnerlonely[i]<0){runnerlonely[i]=0;}
-    if(runnerlonely[i]==1){lonelycount++;}
-  }
-  else{wipecoolofftimer++;}
-
-  if(runnerlonely[i]==1){
-    ctx.font="26px Georgia";
-    ctx.fillStyle=runnertickcolor[i];
-    ctx.fillText("\u2713", field.width/2+Math.sin(runnerprogress[i])*(tracksize-barrierwidth-barrierspace-trackwidth/2)-10, field.height/2+Math.cos(runnerprogress[i])*(tracksize-barrierwidth-barrierspace-trackwidth/2)+10);
-  }
-
-  if(go==1 && (victoryfreeze==0 || victoryfreezeonoff==0)){runnerprogress[i]+=simulationspeed*runnerspeed[i]/200000;}
-  if(runnerprogress[i]>2*Math.PI){runnerprogress[i]-=2*Math.PI;}
-  if(runnerprogress[i]<0){runnerprogress[i]+=2*Math.PI;}
+setTimeout(draw, Math.floor(1000/fps));
 
 }
-
-document.getElementById("lonelycount").innerHTML=parseInt(runners-lonelycount)+"/"+runners;
-
-if(go==1){setTimeout(draw, 16)}
-
-}
-
-function startstop(){if(go==0){go=1;} else{go=0;} draw();}
-
-function addrunner(){
-  runnercolor[runners]="#EE8888";
-  runnerbordercolor[runners]="#FFFFFF";
-  runnertickcolor[runners]="#FFFFFF";
-  runnerprogress[runners]=0;
-  runnerspeed[runners]=document.getElementById("runnerspeed").value;
-  runnersize[runners]=trackwidth/2-3;
-  runnerborder[runners]=1;
-
-  if(runnerspeed[runners]!=0){document.getElementById("runnerspeed").value=parseInt(runnerspeed[runners])+Math.floor(120/parseInt(runnerspeed[runners])+1);}
-  else{document.getElementById("runnerspeed").value=1;}
-
-  runners++;
-
-  for(var i=0; i<runners; i++){runnerlonely[i]=0; runnervictorydance[i]=0}
-
-  lonelycount=0;
-
-  if(go==0){draw();}
-
-}
-
-function demo(){for(var i=0; i<10; i++){addrunner();} document.getElementById("runnerspeed").value=Math.floor(document.getElementById("runnerspeed").value/-4);}
-
-function freeze(){
-  if(victoryfreezeonoff==1){victoryfreezeonoff=0; document.getElementById("freeze").innerHTML="Lonely Freeze On/<span style=\"color:red\">Off</span>"}
-  else{victoryfreezeonoff=1; document.getElementById("freeze").innerHTML="Lonely Freeze <span style=\"color:#00EE99\">On</span>/Off"}
-}
-
-function speedup(){document.getElementById("simulationspeed").value=Math.floor(1.05*document.getElementById("simulationspeed").value);}
-function speeddown(){document.getElementById("simulationspeed").value=Math.floor(0.95*document.getElementById("simulationspeed").value); if(document.getElementById("simulationspeed").value<1){document.getElementById("simulationspeed").value=1;}}
-
-function runnerspeedup(){document.getElementById("runnerspeed").value=parseInt(document.getElementById("runnerspeed").value)+3;}
-function runnerspeeddown(){document.getElementById("runnerspeed").value=parseInt(document.getElementById("runnerspeed").value)-3;}
-
-function alllonely(){for(var i=0; i<runners; i++){runnerlonely[i]=0; runnervictorydance[i]=0} wipecoolofftimer=0; lonelycount=0;}
 
 draw();
-if(window.location.search.substring(1)!="nodemo"){demo();}
 
 </script>
