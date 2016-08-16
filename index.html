@@ -15,7 +15,7 @@
 <script type="text/javascript">
 var field={width:500, height:500};
 var fieldcolor="white";
-var time=-200;
+var time=0;
 var huntersize=18;
 var hunterborder=9;
 var fps=65;
@@ -87,7 +87,7 @@ if(time>200 && time<301){hunter1pos=450-Math.floor(400*(time-200)/100); hunter3x
 if(time<201 && time>100){hunter2pos=54+Math.floor(231*(time-100)/100); hunter3xpos=450-Math.floor(200*(time-100)/100); hunter3ypos=400-Math.floor(115*(time-100)/100);}
 if(time<401 && time>300){hunter2pos=285-Math.floor(231*(time-300)/100); hunter3xpos=50+Math.floor(200*(time-300)/100); hunter3ypos=400-Math.floor(346*(time-300)/100);}
 
-if(time>600){time=0;}
+if(time>400){time=0;}
 
 setTimeout(draw, Math.floor(1000/fps));
 
