@@ -1,8 +1,10 @@
 @font-face {font-family: Liberation Serif; src: url(http://jdgmiles.github.io/LiberationSerif.woff);}
 
-body {color: white; background-color:#000000; font-family: Liberation Serif, Tahoma, Arial, Helvetica, Sans-Serif;}
-button {padding:0px; color: white; background-color:#000000; font-family: Liberation Serif, Tahoma, Arial, Helvetica, Sans-Serif; font-size:180%;}
-input {color: white; text-align:center; background-color:#000000; font-family: Liberation Serif, Tahoma, Arial, Helvetica, Sans-Serif; font-size:180%;}
+body {color: white; background-color:#000000;}
+
+a:link {color: red; text-decoration: none;}
+a:link:hover {text-decoration:underline}
+a:visited {color:#DD0000;}
 
 .overlay {
   position: fixed;
@@ -27,7 +29,7 @@ input {color: white; text-align:center; background-color:#000000; font-family: L
   background: #181818;
   border:2px solid #AAAAAA;
   border-radius: 20px;
-  width: 40%;
+  width: 350px;
   position: relative;
   transition: all 0s ease-in-out;
 }
@@ -43,7 +45,7 @@ input {color: white; text-align:center; background-color:#000000; font-family: L
   color: #fff;
 }
 .popup .close:hover {
-  color: #06D85F;
+  color: #DD0000;
 }
 .popup .content {
   max-height: 30%;
